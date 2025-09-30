@@ -117,7 +117,7 @@ while True:
         user_input = get_valid_word("Submit a word(a-z and hyphen): ")
         wordCount = 0
         for t in wordLists:
-            wordCount = wordCount + t[1:].count(user_input)
+            wordCount = wordCount + t.count(user_input)
         # Add to user list with count
         userList.append(word(user_input, wordCount))
         flag = userBool("Do you want to enter another word(yes/no)? ")
