@@ -1,10 +1,11 @@
 """
 Program built using Python 3 compiled using Thonny IDE.
-CS-4500 SG0
-Group Members: Cynthia Brown, Chuck Okeke, Aaron Kofman
+CS-4500 SG1
+Group Members: Cynthia Brown, TODO:: Add Team member names
 Start Date: 09/11/25
 Revision Date: 09/18/2025
-Submission Date: 09/19/25
+Revision Date 09/30/2025
+Submission Date: 
 Sources: Google AI for quick syntax lookup
          Used for used to help track down weird functionallity of Python
              Stack Overflow
@@ -17,7 +18,8 @@ import sys
 import re
 
 # global variables
-wordList = []
+docList = []
+wordLists = []
 userList = []
 
 # defined objects
@@ -51,7 +53,10 @@ def get_valid_txt(prompt):
 
         # Check if ends in .txt ignoring case
         if user_input.endswith(".txt"):
-            return user_input
+            if not docList or docList.count(user_input) == 0:
+                return user_input
+            else:
+                print("ERROR: You have already entered that filename")
         else:
                 print("ERROR: Please enter a filename ending with .txt")
 
@@ -74,10 +79,12 @@ def read_file(filename):
             content = file.read()
             content = remove_punctuation(content).lower()
             temp = content.lower().split()
-            # Yes Python made me loop through the list to append it to wordlist instead of allowing me to overwrite the variable.
+            # Yes Python made me loop through the list to append it to wordLists instead of allowing me to overwrite the variable.
             # This does allows you to later on add the ability to search multiple documents at once.
-            for t in temp:
-                wordList.append(t)
+            docList.append(filename)
+            wordLists.append(temp)
+            print(docList)
+            print(wordLists)
             return True
     except FileNotFoundError:
         # Throw if file does not exist
@@ -93,18 +100,26 @@ def read_file(filename):
 print("This program reads in a txt file and allows you to query how many times a word appears in that file. All word count results are printed at the end of the program. Enjoy!")
 # loop that runs the program
 while True:
-    flag = False
+    flag = True
     # loop to get and read valid file
-    while not flag:
+    while flag:
         filename = get_valid_txt("Enter txt filename(.txt): ")
-        flag = read_file(filename)
+        read_file(filename)
+        if len(docList) == 10:
+            flag = False
+        else:
+            flag = userBool("Do you want to add another document(yes/no)? ")
         
-    # loop to collect words and count occurences     
+    # loop to collect words and count occurences
+    flag = True
     while flag:
         # Ask user for word
         user_input = get_valid_word("Submit a word(a-z and hyphen): ")
+        wordCount = 0
+        for t in wordLists:
+            wordCount = wordCount + t[1:].count(user_input)
         # Add to user list with count
-        userList.append(word(user_input, wordList.count(user_input)))
+        userList.append(word(user_input, wordCount))
         flag = userBool("Do you want to enter another word(yes/no)? ")
         
     # loop to print out word count results

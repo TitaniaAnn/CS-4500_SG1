@@ -1,0 +1,7 @@
+Many of the projects I do have some form of document management in them. Whether developing demos or features around document management it is often necessary to have test documents. Most of the actual word documents I generate for my role are around sales or feature documentation and have a bit of proprietary information within them making them not ideal for demoing to other clients. So I find my self opening word and pasting in some Lorum Ipsum into the document and saving then repeating till I have enough documents. The problem with this is if i want to show of search or prove to a client that the right document is coming up it is hard because they are either identical or indistinguishable from one another.
+
+I decided to write a little console app that would go to Wikipedia and copy 200 of its pages and save them as word documents. This gave me 200 test documents that each had unique and meaningful yet harmless information very quickly.
+
+I used the OpenXML 2.0 sdk and a CodePlex project called HTML to Open XML to convert the html into word documents. The formatting is not 100% but good enough for my purposes.
+
+Below is the code for the console app, I hope this helps someone else out.
