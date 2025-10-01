@@ -113,7 +113,7 @@ while userBool:
         user_input = get_valid_word("Submit a word(a-z and hyphen): ")
         counts = {}
         for temp in files:
-            counts[f["filename"]] = f["words"].count(user_input)
+            counts[temp["filename"]] = temp["words"].count(user_input)
             
         print(f"\nOccurrences of '{user_input}':")
         for fname, cnt in counts.items():
@@ -126,7 +126,7 @@ while userBool:
 
         
     # loop to print out word count results
-    print("\n--- Search Summary ---")
+    print("\nSearch Summary: ")
     for entry in userList:
         print(f"\nWord: {entry['word']}")
         for fname, cnt in entry["counts"].items():
