@@ -18,9 +18,9 @@ import sys
 import re
 
 # global variables
-docList = []
 wordLists = []
 userList = []
+files = []
 
 # defined objects
 class word: # Yes I know this could have been handled another way but user defined objects are the best
@@ -48,17 +48,18 @@ def userBool(prompt):
 # user input functions
 def get_valid_txt(prompt):
     while True:
-        # Get the file name from user
-        user_input = input(prompt).strip().lower()
+        user_input = input(prompt).strip()
 
-        # Check if ends in .txt ignoring case
-        if user_input.endswith(".txt"):
-            if not docList or docList.count(user_input) == 0:
-                return user_input
-            else:
+        # Check if filename ends with .txt (case-insensitive)
+        if user_input.lower().endswith(".txt"):
+            # Check if filename is already entered
+            if any(temp["filename"].lower() == user_input.lower() for temp in files):
                 print("ERROR: You have already entered that filename")
+            else:
+                return user_input
         else:
-                print("ERROR: Please enter a filename ending with .txt")
+            print("ERROR: Please enter a filename ending with .txt")
+
 
 def get_valid_word(prompt):
     while True:
@@ -74,57 +75,62 @@ def get_valid_word(prompt):
 # read file function
 def read_file(filename):
     try:
-        with open(filename, 'r') as file:
-            # Read file contents
+        with open(filename, 'r', encoding="utf-8") as file:
             content = file.read()
             content = remove_punctuation(content).lower()
-            temp = content.lower().split()
-            # Yes Python made me loop through the list to append it to wordLists instead of allowing me to overwrite the variable.
-            # This does allows you to later on add the ability to search multiple documents at once.
-            docList.append(filename)
-            wordLists.append(temp)
-            print(docList)
-            print(wordLists)
+            words = content.split()
+            files.append({
+                "filename": filename,
+                "words": words,
+                "distinct": set(words)
+            })
             return True
     except FileNotFoundError:
-        # Throw if file does not exist
         print(f"Error: file '{filename}' not found.")
         return False
-    except Exception as e:
-        # catch any additional errors
-        print(f"An error occured: {e}")
-        return False
+
         
 
 # main execution of program
 print("This program reads in a txt file and allows you to query how many times a word appears in that file. All word count results are printed at the end of the program. Enjoy!")
 # loop that runs the program
-while True:
+while userBool:
     flag = True
     # loop to get and read valid file
     while flag:
         filename = get_valid_txt("Enter txt filename(.txt): ")
         read_file(filename)
-        if len(docList) == 10:
+        # stop if 10 files have been entered
+        if len(files) == 10:
             flag = False
         else:
             flag = userBool("Do you want to add another document(yes/no)? ")
+
         
     # loop to collect words and count occurences
-    flag = True
-    while flag:
+    while True:
         # Ask user for word
         user_input = get_valid_word("Submit a word(a-z and hyphen): ")
-        wordCount = 0
-        for t in wordLists:
-            wordCount = wordCount + t.count(user_input)
-        # Add to user list with count
-        userList.append(word(user_input, wordCount))
-        flag = userBool("Do you want to enter another word(yes/no)? ")
+        counts = {}
+        for temp in files:
+            counts[f["filename"]] = f["words"].count(user_input)
+            
+        print(f"\nOccurrences of '{user_input}':")
+        for fname, cnt in counts.items():
+            print(f"  {fname:<20} {cnt:>5}")
+
+        userList.append({"word": user_input, "counts": counts})
+        
+        if not userBool("Do you want to enter another word(yes/no)? "):
+            break
+
         
     # loop to print out word count results
-    for w in userList:
-        print(f"'{w.text}': '{w.count}'")
+    print("\n--- Search Summary ---")
+    for entry in userList:
+        print(f"\nWord: {entry['word']}")
+        for fname, cnt in entry["counts"].items():
+            print(f"  {fname:<20} {cnt:>5}")
         
     # input to exit program
     input("Press Enter to exit the program.")
