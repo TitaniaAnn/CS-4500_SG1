@@ -24,9 +24,10 @@ files = []
 
 # defined objects
 class word: # Yes I know this could have been handled another way but user defined objects are the best
-    def __init__(self, text, count):
+    def __init__(self, text, count, total):
         self.text = text
         self.count = count
+        self.total = total
         
 # defined functions
 def remove_punctuation(text):
@@ -112,14 +113,16 @@ while userBool:
         # Ask user for word
         user_input = get_valid_word("Submit a word(a-z and hyphen): ")
         counts = {}
+        num = 0
         for temp in files:
             counts[temp["filename"]] = temp["words"].count(user_input)
+            num = num +  counts[temp["filename"]]
             
         print(f"\nOccurrences of '{user_input}':")
         for fname, cnt in counts.items():
             print(f"  {fname:<20} {cnt:>5}")
 
-        userList.append({"word": user_input, "counts": counts})
+        userList.append({"word": user_input, "counts": counts, "total":num})
         
         if not userBool("Do you want to enter another word(yes/no)? "):
             break
@@ -127,11 +130,19 @@ while userBool:
         
     # loop to print out word count results
     print("\nSearch Summary: ")
+    print("=================================================")
+    num = 0
+    temp = ""
     for entry in userList:
-        print(f"\nWord: {entry['word']}")
-        for fname, cnt in entry["counts"].items():
-            print(f"  {fname:<20} {cnt:>5}")
-        
+        t = f"{entry['word']} - {entry['total']}"
+        temp = temp + f"|{t:^20}|"
+        num = num + 1
+        if num == 2:
+            print(temp)
+            temp = ""
+            num = 0
+    print("=================================================")
+    
     # input to exit program
     input("Press Enter to exit the program.")
     sys.exit()
