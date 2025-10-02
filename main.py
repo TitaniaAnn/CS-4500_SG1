@@ -105,8 +105,34 @@ while userBool:
             flag = False
         else:
             flag = userBool("Do you want to add another document(yes/no)? ")
+            
+     
+     
+    print("\nFile Statistics:")
 
-        
+    # Find the max character length of filenames, total words, and distinct words. Fwidth = file, twidth = total words, dwidth = distinct words
+    fwidth = max(len("Filename"), max(len(f["filename"]) for f in files))
+    twidth = max(len("Total Words"), max(len(str(len(f["words"]))) for f in files))
+    dwidth = max(len("Distinct Words"), max(len(str(len(f["distinct"]))) for f in files))
+
+    # Instructions don't say headers should be right aligned, but it looks awkward otherwise. Also the double spaces between
+    print(
+        f'{"Filename".rjust(fwidth)}  '
+        f'{"Total Words".rjust(twidth)}  '
+        f'{"Distinct Words".rjust(dwidth)}'
+    )
+
+    # Actual data under headers. Filename, total words, then distinct words, right aligned. Or 'right justified' as instructions say
+    for f in files:
+        words = len(f["words"])
+        distinct = len(f["distinct"])
+        print(
+            f'{f["filename"].rjust(fwidth)}  '
+            f'{str(words).rjust(twidth)}  '
+            f'{str(distinct).rjust(dwidth)}'
+        )
+
+
     # loop to collect words and count occurences
     while True:
         # Ask user for word
