@@ -1,10 +1,11 @@
 """
 Program built using Python 3 compiled using Thonny IDE.
 CS-4500 SG1
-Group Members: Cynthia Brown, TODO:: Add Team member names
+Group Members: Cynthia Brown, Kayla Gaynor, Brandon Schettler
 Start Date: 09/11/25
 Revision Date: 09/18/2025
 Revision Date 09/30/2025
+Revision Date 10/09/2025
 Submission Date: 
 Sources: Google AI for quick syntax lookup
          Used for used to help track down weird functionallity of Python
@@ -21,13 +22,6 @@ import re
 wordLists = []
 userList = []
 files = []
-
-# defined objects
-class word: # Yes I know this could have been handled another way but user defined objects are the best
-    def __init__(self, text, count, total):
-        self.text = text
-        self.count = count
-        self.total = total
         
 # defined functions
 def remove_punctuation(text):
@@ -152,22 +146,27 @@ while userBool:
         
         if not userBool("Do you want to enter another word(yes/no)? "):
             break
-
         
     # loop to print out word count results
+    lg = len(max((u['word'] for u in userList), key=len)) + len(str(max((u['total'] for u in userList)))) + 4
     print("\nSearch Summary: ")
-    print("=================================================")
+    bdr = "" + "=" * ((lg*2)+8)
+    print(bdr)
     num = 0
     temp = ""
-    for entry in userList:
-        t = f"{entry['word']} - {entry['total']}"
-        temp = temp + f"|{t:^20}|"
-        num = num + 1
-        if num == 2:
-            print(temp)
-            temp = ""
-            num = 0
-    print("=================================================")
+    if userList:
+        alphaUserList = sorted(userList, key=lambda x: x["word"])
+        numUserList = sorted(userList, key=lambda x: x["total"])
+        lenUserList = sorted(userList, key=lambda x: len(x["word"]))
+        for entry in alphaUserList:
+            t = f"{entry['word']} - {entry['total']}"
+            temp = temp + f"|  {t:<{lg}}  |"
+            num = num + 1
+            if num == 2:
+                print(temp)
+                temp = ""
+                num = 0
+    print(bdr)
     
     # input to exit program
     input("Press Enter to exit the program.")
