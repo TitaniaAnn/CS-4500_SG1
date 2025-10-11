@@ -97,6 +97,7 @@ while userBool:
         read_file(filename)
         # stop if 10 files have been entered
         if len(files) == 10:
+            print("Collected 10 files. Proceeding...")
             flag = False
         else:
             flag = userBool("Do you want to add another document(yes/no)? ")
