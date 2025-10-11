@@ -19,7 +19,7 @@ import sys
 import re
 
 # global variables
-wordLists = []
+# wordLists = []
 userList = []
 files = []
         
